@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery-3.2.1.min.js" ></script>
+    <script>
+        $(function(){
+            
+            $("#tijiao").click(function(){
+              
+                var date=$("#form").serialize();
+                $.post("http://localhost:8080/SSMTWO/sub/addSubject.do",date,function(result){
+                    //增加
+                    if(result){
+                        alert("增加成功！");
+                        location.href='index.html';
+                    }else{
+                        alert("删除失败！");
+                    }
+                });
+
+            });
+
+        });
+    
+    </script>
+</head>
+<body>
+    
+<form id="form" name="form" method="post">
+    <label for="subjectName">科目名称：</label><input type="text" id="subjectName" name="subjectName"/><br>
+    <label for="gradeId">科目年级：</label><input type="text" id="gradeId" name="gradeId"/><br>
+    <label for="createDate">创建日期：</label><input type="text" id="createDate" name="createDate"/><br><br>
+    <input type="button"  id="tijiao"  value="提交"/>
+</form>
+</body>
+<style>
+#form{
+    padding: 10px;
+    width: 200px;
+    height: 200px;
+    background-color: rgba(0, 140, 255, 0.151);
+}
+
+</style>
+</html>

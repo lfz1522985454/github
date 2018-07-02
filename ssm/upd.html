@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery-3.2.1.min.js" ></script>
+    <script>
+        $(function(){
+
+             var subId = localStorage.getItem("subId");   
+             bindDate();  
+            //绑定数据
+            function bindDate(){
+                $.post("http://localhost:8080/SSMTWO/sub/selById.do",{"subjectId":subId},function(res){
+                       $('#subjectId').val(res.subjectId);
+                       $('#subjectName').val(res.subjectName);
+                       $('#gradeId').val(res.gradeId);
+                       $('#createDate').val(res.createDate);
+
+                },"json");
+
+            }
+
+            $("#tijiao").click(function(){
+               var param= $('#form').serialize();
+               $.post("http://localhost:8080/SSMTWO/sub/upd.do",param,function(result){
+                    if(result){
+                        alert("修改成功！");
+                        location.href='index.html';
+                    }else{
+                        alert("删除失败！");
+                    }
+               },"text");
+            });
+
+        });
+    
+    </script>
+</head>
+<body>
+    
+<form id="form" name="form" method="post">
+    <label for="subjectId">科目编号：</label><input readonly type="text" id="subjectId" name="subjectId"/><br>
+    <label for="subjectName">科目名称：</label><input type="text" id="subjectName" name="subjectName"/><br>
+    <label for="gradeId">科目年级：</label><input type="text" id="gradeId" name="gradeId"/><br>
+    <label for="createDate">创建日期：</label><input type="text" id="createDate" name="createDate"/><br><br>
+    <input type="button"  id="tijiao"  value="提交"/>
+</form>
+</body>
+<style>
+#form{
+    padding: 10px;
+    width: 200px;
+    height: 200px;
+    background-color: rgba(0, 140, 255, 0.151);
+}
+
+</style>
+</html>

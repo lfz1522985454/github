@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery-3.2.1.min.js" ></script>
+
+    <script>
+    var pageCount=0;
+      //获取数据
+      function getDate(){
+            var date= $("#form1").serialize();
+            $.post("http://windows10.microdone.cn:8080/SSMTWO/sub/page.do",date,function(result){
+                pageCount=result.page.pageCount;
+                var str="";
+                for(var i=0;i<result.subList.length;i++){
+                    str+=" <tr><td>"+result.subList[i].subjectId+"</td><td>"+result.subList[i].subjectName+"</td><td>"+result.subList[i].gradeId+"</td><td>"+result.subList[i].createDate+"</td> <td><button id='upd' onclick='upd(&quot;"+result.subList[i].subjectId+"&quot;)'>修改</button>&nbsp;<button id='del' onclick='del(&quot;"+result.subList[i].subjectId+"&quot;)'>删除</button></td></td></tr>";
+                }
+                $("#show tr:gt(0)").remove();//移除第一行以后的数据
+                $("#show").append(str);//追加
+            },"json");
+        }
+    $(function(){
+        getDate();//默认查询一次
+      
+        //查询
+        $("#btnQuery").click(function(){
+            $("#pageIndex").val(1);
+            getDate();
+        });
+         //首页
+        $("#sy").click(function(){
+            $("#pageIndex").val(1);
+            getDate();
+        });
+        //上一页
+        $("#syy").click(function(){
+            var a=parseInt($("#pageIndex").val());
+            $("#pageIndex").val(a-1);
+            getDate();
+        });
+        //下一页
+        $("#xyy").click(function(){
+            var a=parseInt($("#pageIndex").val());
+            $("#pageIndex").val(a+1);
+            getDate();
+        });
+        //尾页
+        $("#wy").click(function(){
+            $("#pageIndex").val(pageCount);
+            getDate();
+        });
+
+       
+     
+
+    });
+    function del(id){
+       if(confirm("确认删除吗?")){
+        $.post("http://localhost:8080/SSMTWO/sub/del.do",{"subjectId":id},function(result){
+                //删除
+                if(result){
+                    alert("删除成功！");
+                    getDate();
+                }else{
+                    alert("删除失败！");
+                }
+
+        },"text");
+    
+    
+    
+    }
+   }
+   function upd(id){
+        localStorage.setItem("subId",id);
+        location.href='upd.html';
+   }
+    </script>
+</head>
+<body>
+
+            <form  id="form1" name="form1" method="post" >
+                科目名称：
+                <input id="SubjectName" name="SubjectName" type="text">
+                <input id="pageIndex" name="pageIndex" type="hidden" value="1">
+                <input id="btnQuery" name="button" type="button" value="提交">
+            </form>
+            
+            <table id="show" width="400px" border="1" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td >科目编号</td>
+                    <td>科目名称</td>
+                    <td>科目年级</td>
+                    <td>创建日期</td>
+                    <td>操作</td>
+                </tr>
+            </table>
+            <a  href="add.html">增加</a>&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <div id="pageList">
+            <a id="sy"  href="javascript:void">首页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a id="syy" href="javascript:void">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a id="xyy" href="javascript:void">下一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a id="wy" href="javascript:void">尾页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+    
+</body>
+<style>
+*{
+    font-size: 12px
+}
+#form1{
+   
+    width: 588px;
+    height: 30px;
+    padding: 5px;
+    background-color: rgb(247, 0, 255);
+    text-align: center;
+    line-height: 30px;
+    border: 1px solid #222;
+
+}
+#show{
+
+    width: 600px;
+  
+    padding: 5px;
+    background-color: rgb(238, 255, 0)
+}
+td{
+    text-align: center;
+    height: 40px;
+}
+#pageList{
+    width: 588px;
+    border: 1px solid #222;
+    padding: 5px;
+    background-color: rgb(255, 136, 0)
+}
+
+a{
+    color: blue
+}
+#del{
+background-color: rgba(187, 34, 34, 0.685);
+width: 40px;
+height: 20px;
+border: 1px;
+color: #ffffff
+}
+
+#btnQuery{
+background-color: rgba(2, 255, 44, 0.685);
+width: 40px;
+height: 23px;
+border: 1px;
+color: #ffffff
+
+}
+#upd{
+background-color: rgba(2, 255, 44, 0.685);
+width: 40px;
+height: 20px;
+border: 1px;
+color: #ffffff
+}
+#SubjectName{
+width: 150px;
+border: 0px;
+height: 20px;
+
+}
+</style>
+</html>

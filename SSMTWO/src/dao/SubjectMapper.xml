@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.SubjectMapper">
+	<resultMap type="Subject" id="subList">
+		<id column="subjectId" property="subjectId"/>
+		<result column="subjectName" property="subjectName"/>
+		<result column="gradeId" property="gradeId"/>
+		<result column="createDate" property="createDate"/>
+	</resultMap>
+	<select id="selectSubjectCount" parameterType="SubjectDTO" resultType="int">
+		select count(1) from subject
+		<trim prefix="where" prefixOverrides="and">
+			<if test="subjectName!=null">
+				subjectName like CONCAT('%',#{subjectName},'%')
+			</if>
+		</trim>
+	</select>
+	<select id="selectSubjectByPage" parameterType="SubjectDTO" resultMap="subList">
+		select * from subject
+		<trim prefix="where" prefixOverrides="and">
+			<if test="subjectName!=null">
+				subjectName like CONCAT('%',#{subjectName},'%')
+			</if>
+		</trim>
+		LIMIT #{fromTo},#{pageSize}
+	</select>
+	<delete id="deleteSubjectById" parameterType="int">
+		delete from subject where subjectId=#{subjectId}
+	</delete>
+	<insert id="addSubject" parameterType="Subject">
+			insert into subject(subjectName,gradeId,createDate)
+		values(#{subjectName},#{gradeId},#{createDate})
+	</insert>
+	<select id="selectSubjectById" parameterType="int" resultMap="subList">
+		select * from subject where subjectId=#{subjectId}
+	</select>
+	<update id="updateSubject" parameterType="Subject">
+			update Subject set subjectName=#{subjectName},gradeId=#{gradeId},createDate=#{createDate} where subjectId=#{subjectId}
+	</update>
+	
+</mapper>
